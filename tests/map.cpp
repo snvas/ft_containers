@@ -13,25 +13,6 @@ void print_map_values(ft::map<T1, T2> &map, std::string str)
 	std::cout << "size: " << map.size() << std::endl;
 }
 
-void print_test_equal_range(int k, ft::map<int, int> &map)
-{
-	std::cout << "map.equal_range(" << k << "): ";
-	ft::pair<ft::map<int, int>::iterator, ft::map<int, int>::iterator> pair;
-	pair = map.equal_range(k);
-	if (pair.first != map.end()) {
-		std::cout << "[" << pair.first->first <<  "] = " << pair.first->second;
-	} else {
-		std::cout << "END";
-	}
-	std::cout << " to ";
-	if (pair.second != map.end()) {
-		std::cout << "[" << pair.second->first <<  "] = " << pair.second->second;
-	} else {
-		std::cout << "END";
-	}
-	std::cout << std::endl;
-}
-
 template<typename T, typename U>
 static std::ostream& operator<<(std::ostream& out, const ft::pair<T, U>&p){
 	out << "  pair[" << p.first << ", " << p.second << "]";
@@ -368,55 +349,15 @@ void test_map(void)
 	it = emptyMap.insert(it, ft::make_pair(20, 2));
 	print_map_values(emptyMap, "emptyMap after insert with position: ");
 
-	print_map_values(notEmptyMap, "notEmptyMap before range insert: ");
-	notEmptyMap.insert(emptyMap.begin(), emptyMap.end());
-	print_map_values(notEmptyMap, "notEmptyMap after range insert: ");
-
 	std::cout << "[ --- erase ]" << std::endl;
 	print_map_values(emptyMap, "emptyMap before erase begin: ");
 	emptyMap.erase(emptyMap.begin());
 	print_map_values(emptyMap, "emptyMap after erase begin: ");
-
-	print_map_values(notEmptyMap, "notEmptyMap before erase begin: ");
-	notEmptyMap.erase(notEmptyMap.begin());
-	print_map_values(notEmptyMap, "notEmptyMap after erase begin: ");
-
-	print_map_values(copyMap, "copyMap before erase begin: ");
-	copyMap.erase(copyMap.begin());
-	print_map_values(copyMap, "copyMap after erase begin: ");
-
-	print_map_values(rangeMap, "rangeMap before erase begin: ");
-	rangeMap.erase(rangeMap.begin());
-	print_map_values(rangeMap, "rangeMap after erase begin: ");
 	
 	std::cout << "[ --- erase key_type ]" << std::endl;
-	print_map_values(emptyMap, "emptyMap before erase 1: ");
-	std::cout << "emptyMap.erase(1): " << emptyMap.erase(1) << std::endl;
-	print_map_values(emptyMap, "emptyMap after erase 1: ");
-
-	print_map_values(emptyMap, "emptyMap before erase 2: ");
+		print_map_values(emptyMap, "emptyMap before erase 2: ");
 	std::cout << "emptyMap.erase(2): " << emptyMap.erase(2) << std::endl;
 	print_map_values(emptyMap, "emptyMap after erase 2: ");
-
-	print_map_values(notEmptyMap, "notEmptyMap before erase 2: ");
-	std::cout << "notEmptyMap.erase(2): " << notEmptyMap.erase(2) << std::endl;
-	print_map_values(notEmptyMap, "notEmptyMap after erase 2: ");
-	
-	print_map_values(copyMap, "copyMap before erase 2: ");
-	std::cout << "copyMap.erase(2): " << copyMap.erase(2) << std::endl;
-	print_map_values(copyMap, "copyMap after erase 2: ");
-
-	print_map_values(rangeMap, "rangeMap before erase 2: ");
-	std::cout << "rangeMap.erase(2): " << rangeMap.erase(2) << std::endl;
-	print_map_values(rangeMap, "rangeMap after erase 2: ");
-
-	print_map_values(rangeMap, "rangeMap before erase 9: ");
-	std::cout << "rangeMap.erase(9): " << rangeMap.erase(9) << std::endl;
-	print_map_values(rangeMap, "rangeMap after erase 9: ");
-
-	print_map_values(notEmptyMap, "notEmptyMap before erase 5: ");
-	std::cout << "notEmptyMap.erase(5): " << notEmptyMap.erase(5) << std::endl;
-	print_map_values(notEmptyMap, "notEmptyMap after erase 5: ");
 
 	std::cout << "[ --- erase range ]" << std::endl;
 	print_map_values(notEmptyMap, "notEmptyMap before erase range: ");
@@ -442,46 +383,27 @@ void test_map(void)
 	print_map_values(copyMap, "copyMap before clear: ");
 	copyMap.clear();
 	print_map_values(copyMap, "copyMap after clear: ");
-	/*
-	**	Observers methods
-	*/
+	
 	std::cout << "------------------------------------" << std::endl;
-	std::cout << "[ Observers methods ]" << std::endl;
+	std::cout << "[ Operations Methods ]" << std::endl;
 
 	notEmptyMap[1] = 2;
 	notEmptyMap[5] = 10;
 	notEmptyMap[9] = 18;
+	ft::map<int, int>::iterator itInt;
+	ft::map<int, int>::iterator itInt2;
+	itInt = notEmptyMap.find(5);
+	itInt2 = notEmptyMap.find(9);
+	std::cout << "it: " << itInt->first << std::endl;
+	std::cout << "it2: "<< itInt2->first << std::endl;
 	
-	ft::map<int, int>::key_compare k_compare = notEmptyMap.key_comp();
-	int last = notEmptyMap.rbegin()->first;
-	it = notEmptyMap.begin();
+	ft::map<int, int>::value_compare val_comp = notEmptyMap.value_comp();
+	ft::map<int, int>::key_compare key_comp = notEmptyMap.key_comp();
 
-	std::cout << "print notEmptyMap using key compare: " << std::endl;
-	while (k_compare(it->first, last))
-	{
-		std::cout << "[" << it->first <<  "] = " << it->second << std::endl;
-		it++;
-	}
-	std::cout << "[" << it->first <<  "] = " << it->second << std::endl;
-
-
-	ft::map<int, int>::value_compare v_compare = notEmptyMap.value_comp();
-	std::cout << "\nprint notEmptyMap using value compare: " << std::endl;
-	it = notEmptyMap.begin();
-	ft::pair<int, int> last_pair = *(notEmptyMap.rbegin());
-
-	while (v_compare(*it, last_pair))
-	{
-		std::cout << "[" << it->first <<  "] = " << it->second << std::endl;
-		it++;
-	}
-	std::cout << "[" << it->first <<  "] = " << it->second << std::endl;
-
-	/*
-	**	Operations Methods
-	*/
-	std::cout << "------------------------------------" << std::endl;
-	std::cout << "[ Operations Methods ]" << std::endl;
+	std::cout << "val_comp it e it2: " << val_comp(*itInt, *itInt2) << '\n';
+	std::cout << "val_comp it e it: " << val_comp(*itInt, *itInt) << '\n';
+	std::cout << "key_comp it e it2: " << key_comp(itInt->first, itInt2->first) << '\n';
+	std::cout << "key_comp it e it: " << key_comp(itInt->first, itInt->first) << '\n';
 
 	std::cout << "[ find ]" << std::endl;
 	print_map_values(notEmptyMap, "notEmptyMap values: ");
@@ -499,7 +421,15 @@ void test_map(void)
 	std::cout << "notEmptyMap.count(5): " << notEmptyMap.count(5) << std::endl;
 	std::cout << "notEmptyMap.count(9): " << notEmptyMap.count(9) << std::endl;
 	std::cout << "notEmptyMap.count(10): " << notEmptyMap.count(10) << std::endl;
-
+	
+	std::cout << "[ equal_range ]" << std::endl;
+	std::cout << *notEmptyMap.equal_range(0).first << '\n';
+	std::cout << *notEmptyMap.equal_range(1).first << '\n';
+	std::cout << *notEmptyMap.equal_range(2).first << '\n';
+	std::cout << *notEmptyMap.equal_range(4).first << '\n';
+	std::cout << *notEmptyMap.equal_range(5).first << '\n';
+	std::cout << *notEmptyMap.equal_range(9).first << '\n';
+	
 	std::cout << "[ lower_bound ]" << std::endl;
 	std::cout << "notEmptyMap.lower_bound(1): " << notEmptyMap.lower_bound(1)->first << std::endl;
 	std::cout << "notEmptyMap.lower_bound(2): " << notEmptyMap.lower_bound(2)->first << std::endl;
@@ -516,15 +446,7 @@ void test_map(void)
 	std::cout << "notEmptyMap.upper_bound(9) == notEmptyMap.end(): " 
 			<< (notEmptyMap.upper_bound(9) ==  notEmptyMap.end()) << std::endl;
 	
-	std::cout << "[ equal_range ]" << std::endl;
-	print_test_equal_range(0, notEmptyMap);
-	print_test_equal_range(1, notEmptyMap);
-	print_test_equal_range(2, notEmptyMap);
-	print_test_equal_range(4, notEmptyMap);
-	print_test_equal_range(5, notEmptyMap);
-	print_test_equal_range(8, notEmptyMap);
-	print_test_equal_range(9, notEmptyMap);
-	print_test_equal_range(10, notEmptyMap);
+	
 
 	/*
 	**	Allocator

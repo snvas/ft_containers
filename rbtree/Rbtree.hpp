@@ -3,15 +3,12 @@
 
 #define BLACK 0
 #define RED 1
-#define DOUBLE_BLACK 2
 
 #define CRED "\033[91m"
 #define CEND "\033[0m"
 
 //#include "../containers/rb_iterator.hpp"
-
 /*
-
 Red-black tree class, designed for use in implementing STL
 associative containers (set, multiset, map, and multimap). The
 insertion and deletion algorithms are based on those in Cormen,
@@ -27,7 +24,6 @@ etc.);
 (2) when a node being deleted has two children its successor node is
 relinked into its place, rather than copied, so that the only
 iterators invalidated are those referring to the deleted node.
-
 */
 
 namespace ft
@@ -50,41 +46,40 @@ namespace ft
 			data = value;
 		}
 };
-// the red-black-tree itself
+/* the red-black-tree itself
+* RED BLACK TREE RULES
 
-// RED BLACK TREE RULES
+* 	1. Every node is red or black
+* 	2. Root is always black
+* 	3. New insertions are always red
+* 	4. Every path from root - leaf(NULL) has the same number of BLACK nodes
+* 	5. No path can have two consecutice RED nodes
+* 	6. NULLs are black
+* 	7. Every node has two children
 
-// 	1. Every node is red or black
-// 	2. Root is always black
-// 	3. New insertions are always red
-// 	4. Every path from root - leaf(NULL) has the same number of BLACK nodes
-// 	5. No path can have two consecutice RED nodes
-// 	6. NULLs are black
-// 	7. Every node has two children
+* Example tree to understand the child - parent - uncle relationship
 
-// Example tree to understand the child - parent - uncle relationship
-//
-// 				_root
-// 			/			\.
-// 		left			right
-// 		/	\			/	\.
-//	l1		r1		l2		r2
-//
-// root has two children: left and right
-// the parent of l1 and r1 is left
-// the uncle of l1 and r1 is right
+ 				_root
+ 			/			\.
+ 		left			right
+ 		/	\			/	\.
+	l1		r1		l2		r2
 
+* root has two children: left and right
+* the parent of l1 and r1 is left
+* the uncle of l1 and r1 is right
 
-// 		Rules for fixing an invalid red-black-tree
+* 		Rules for fixing an invalid red-black-tree
 
-// 1. If we have BLACK uncle - rotate
-// 	- if imbalance is in right child and right subtree - left rotation
-// 	- if imbalance is in right child and left subtree - right/left rotation
-// 	- if imbalance is in left child and right subtree - left/right rotation
-// 	- if imbalance is in left child and left subtree - right rotation
-// 2. If we have RED uncle - color flip
-// 3. After rotation working nodes should look like: parent - black, childrens - red
-// 4. After color flip working nodes should look like: parent - red, childrens - black
+* 1. If we have BLACK uncle - rotate
+* 	- if imbalance is in right child and right subtree - left rotation
+* 	- if imbalance is in right child and left subtree - right/left rotation
+* 	- if imbalance is in left child and right subtree - left/right rotation
+* 	- if imbalance is in left child and left subtree - right rotation
+* 2. If we have RED uncle - color flip
+* 3. After rotation working nodes should look like: parent - black, childrens - red
+* 4. After color flip working nodes should look like: parent - red, childrens - black
+*/
 template <class T, 
 		  class Compare, 
 		  class Alloc = std::allocator<T>,
@@ -97,6 +92,8 @@ class Rbtree
 	typedef typename Node_Alloc::size_type size_type;
 	typedef Node<T>						node_type;
 	typedef Node_Alloc 					node_allocator_type;
+	//typedef ft::rb_iterator< ft::map<key_type, node_type> > iterator;
+	//typedef ft::rb_iterator< ft::map<key_type, node_type> > const_iterator;
 	
 
       private:
@@ -106,6 +103,9 @@ class Rbtree
 	node_allocator_type	_node_alloc;
 	
 	public:
+	// ###########################################################################
+	// #                              CONSTRUCTORS                               #
+	// ###########################################################################
 	Rbtree(value_compare comp = value_compare(), allocator_type alloc = allocator_type(),
 	       node_allocator_type node_alloc = node_allocator_type())
 	    : _root(NULL), _alloc(alloc), _comp(comp), _node_alloc(node_alloc)
@@ -123,14 +123,6 @@ class Rbtree
 		copy_nodes(src.get_root());
 	}
 
-	bool is_empty() const { 
-		return this->_root == NULL; 
-	}
-
-	size_type max_size() const {
-		return this->_node_alloc.max_size();
-	}
-
 	Rbtree &operator=(const Rbtree &src)
 	{
 		destroy_nodes(this->_root);
@@ -138,6 +130,12 @@ class Rbtree
 		copy_nodes(src.get_root());
 		return (*this);
 	}
+
+
+	// #############################################################################
+	// #                                ASSESSORS                                  #
+	// #############################################################################
+
 
 	static node_type *minimum(node_type *node)
 	{
@@ -184,6 +182,33 @@ class Rbtree
 			return (prev_above);
 		return (node->left);
 	}
+
+	bool is_empty() const { 
+		return this->_root == NULL; 
+	}
+
+	size_type max_size() const {
+		return this->_node_alloc.max_size();
+	}
+
+	node_type *get_root(void) const
+	{
+		return (this->_root);
+	}
+
+	T get_root_data(void)
+	{
+		return (*this->_root->data);
+	}
+
+	const allocator_type& get_allocator() const{
+			return (_alloc);
+		}
+
+	// ###########################################################################
+	// #                            MEMBER FUNCTIONS                             #
+	// ###########################################################################
+
 
 	static bool is_null_leaf(const node_type *node)
 	{
@@ -307,26 +332,12 @@ class Rbtree
 		return (0);
 	}
 
-	node_type *get_root(void) const
-	{
-		return (this->_root);
-	}
-
 	void swap(Rbtree &src)
 	{
 		std::swap(this->_root, src._root);
 		std::swap(this->_alloc, src._alloc);
 		std::swap(this->_comp, src._comp);
 	}
-
-	T get_root_data(void)
-	{
-		return (*this->_root->data);
-	}
-
-	const allocator_type& get_allocator() const{
-			return (_alloc);
-		}
 
 	void clear(void)
 	{
@@ -421,6 +432,7 @@ class Rbtree
 				uncle = node->parent->parent->left;
 				if (get_color(uncle) == RED)
 				{
+					//std::cout << "Case 1a\n";
 					set_color(uncle, BLACK);
 					set_color(node->parent, BLACK);
 					set_color(node->parent->parent, RED);
@@ -430,9 +442,11 @@ class Rbtree
 				{
 					if (node == node->parent->left)
 					{
+						//std::cout << "Case 2a\n";
 						node = node->parent;
 						rotate_right(node);
 					}
+					//std::cout << "Case 3a\n";
 					set_color(node->parent, BLACK);
 					set_color(node->parent->parent, RED);
 					rotate_left(node->parent->parent);
@@ -443,6 +457,7 @@ class Rbtree
 				uncle = node->parent->parent->right;
 				if (get_color(uncle) == RED)
 				{
+					//std::cout << "Case 1b\n";
 					set_color(uncle, BLACK);
 					set_color(node->parent, BLACK);
 					set_color(node->parent->parent, RED);
@@ -452,15 +467,18 @@ class Rbtree
 				{
 					if (node == node->parent->right)
 					{
+						//std::cout << "Case 2b\n";
 						node = node->parent;
 						rotate_left(node);
 					}
+					// std::cout << "Case 3b\n";
 					set_color(node->parent, BLACK);
 					set_color(node->parent->parent, RED);
 					rotate_right(node->parent->parent);
 				}
 			}
 		}
+		// std::cout << "Case 0\n";
 		set_color(this->_root, BLACK);
 		return;
 	}
@@ -490,128 +508,79 @@ class Rbtree
 		if (v)
 			v->parent = u->parent;
 	}
-//new *uncle - returns pointer to uncle
-	/*node_type *uncle(node_type *n){
-		// If no parent or grandparent, then no uncle
-		if (n->parent == NULL || n->parent->parent == NULL)
-			return NULL;
-		if (n->parent->isOnLeft())
-			//uncle on right;
-			return n->parent->parent->right;
-		else
-		//uncle on left;
-			return n->parent->parent->left;
-	}
-//new isonleft - check if node is left child of parent
-	bool isOnLeft(){ return this == this->parent->left; }
-
-// returns pointer to sibling
-	node_type *sibling(node_type *n){
-		if (n->parent == NULL)
-			return NULL;
-		if (isOnLeft())
-			return n->parent->right;
-		return n->parent->left;
-	}
-
-	bool hasRedChild(){
-		return (this->left != NULL && this->left->color == 1)
-			|| (this->right != NULL && this->right->color == 1);
-	}// this function check if has a red child
-*/
 
 	//function that recoloring nodes after delete
 	void fix_delete_RBT(node_type *node)
 	{
 		node_type *sibling;
 		while (node != this->_root && get_color(node) == BLACK)
-		//enquanto não for o root e a cor for preto
 		{
 			if (node == node->parent->left)
-			//se node for igual o pai esquerdo
 			{
 				sibling = node->parent->right;
-				//sibling recebe o pai direito
 				if (get_color(sibling) == RED)
 				{
+					//std::cout << "Case 1a\n";
 					set_color(sibling, BLACK);
-					//set a color for sibling like black
 					set_color(node->parent, RED);
-					//set color for parent like red
 					rotate_left(node->parent);
-					//rotaciona o pai para a esquerda
 					sibling = node->parent->right;
-					//recebe o pai direito
 				}
 				if (get_color(sibling->left) == BLACK &&
 				    get_color(sibling->right) == BLACK)
-					//se os dois irmãos são preto
 				{
+					//std::cout << "Case 2a\n";
 					set_color(sibling, RED);
-					//seta a cor Red para o irmão
 					node = node->parent;
-					// node recebe o pai
 				}
 				else
 				{
 					if (get_color(sibling->right) == BLACK)
-					//se o irmão a direita é black
 					{
+						//std::cout << "Case 3a\n";
 						set_color(sibling->left, BLACK);
-						//seta a cor Black para o irmão a esquerda
 						set_color(sibling, RED);
-						//seta a cor Red para o irmão
 						rotate_right(sibling);
-						//rotaciona sibling
 						sibling = node->parent->right;
-						//sibling recebe o pai a direita
 					}
+					//std::cout << "Case 4a\n";
 					set_color(sibling, get_color(node->parent));
-					//set cor de sibling com a cor do pai
 					set_color(node->parent, BLACK);
-					//seta a cor do pai para black
 					set_color(sibling->right, BLACK);
-					//seta a cor do irmão à direita Black
 					rotate_left(node->parent);
-					//rotaciona o pai
 					break;
 				}
 			}
 			else
 			{
 				sibling = node->parent->left;
-				//sibling recebe o pai à esquerda
 				if (get_color(sibling) == RED)
-				//se a cor de sibling for Red
 				{
+					//std::cout << "Case 1b\n";
 					set_color(sibling, BLACK);
-					//seta a cor do sibling para Black
 					set_color(node->parent, RED);
-					//seta a cor do pai para red
 					rotate_right(node->parent);
-					//rotaciona o pai para direita
 					sibling = node->parent->left;
-					//sibling recebe o pai à esquerda
 				}
 				if (get_color(sibling->right) == BLACK &&
 				    get_color(sibling->left) == BLACK)
-					//se os dois irmãos são Black
 				{
+					//std::cout << "Case 2b\n";
 					set_color(sibling, RED);
-					//seta cor Red para sibling
 					node = node->parent;
-					//node reber o pai
 				}
 				else
 				{
 					if (get_color(sibling->left) == BLACK)
 					{
+						//std::cout << "Case 3b\n";
 						set_color(sibling->right,
 							  BLACK);
 						set_color(sibling, RED);
 						rotate_left(sibling);
 						sibling = node->parent->left;
 					}
+					//std::cout << "Case 4b\n";
 					set_color(sibling,
 						  get_color(node->parent));
 					set_color(node->parent, BLACK);
@@ -621,10 +590,10 @@ class Rbtree
 				}
 			}
 		}
+		//std::cout << "Case 5 - root\n";
 		set_color(node, BLACK);
 	}
 	
-
 	void delete_node(node_type *node)
 	{
 		if (!node)
@@ -647,19 +616,19 @@ class Rbtree
 		node_type *aux;
 		node_type *temp2 = temp;
 		int temp_original_color = temp2->color;
-		if (is_null_leaf(temp->left))
+		if (is_null_leaf(temp->left))// no children or only right
 		{
 			aux = temp->right;
 			destroy_node(temp->left);
 			transplant(temp, temp->right);
 		}
-		else if (is_null_leaf(temp->right))
+		else if (is_null_leaf(temp->right))// only left child
 		{
 			aux = temp->left;
 			destroy_node(temp->right);
 			transplant(temp, temp->left);
 		}
-		else
+		else// both children
 		{
 			temp2 = minimum(temp->right);
 			temp_original_color = temp2->color;
@@ -682,6 +651,7 @@ class Rbtree
 		if (temp_original_color == BLACK)
 			fix_delete_RBT(aux);
 	}
+
 	void destroy_nodes(node_type *node)
 	{
 		if (!node)
@@ -731,13 +701,9 @@ class Rbtree
 		insert_value(*node->data);
 		copy_nodes(node->right);
 	}
-
-	//iterator begin(void) { return iterator(minimum(_root))}
-	//const_iterator begin(void) { return const_iterator(minimum(_root))}
-	//iterator rbegin(void) { return reverse_iterator(maximum(_root))}
-	//const_iterator rbegin(void) { return const_reverse_iterator(maximum(_root))}
-
-
+	// =================================================================================
+	//						DEBUG AND PRINT FUNCTIONS
+	// =================================================================================
 		void printBT(const std::string &prefix, const node_type *node, bool isRight){
 			if(node){
 				std::cout << prefix;
@@ -764,5 +730,5 @@ class Rbtree
 		}
 
 	};
-} // namespace ft
+} 
 #endif

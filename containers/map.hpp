@@ -6,7 +6,7 @@
 /*   By: snovaes <snovaes@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/09 19:14:21 by snovaes           #+#    #+#             */
-/*   Updated: 2023/02/05 17:45:35 by snovaes          ###   ########.fr       */
+/*   Updated: 2023/02/05 20:01:49 by snovaes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,19 +71,19 @@ namespace ft
 
    /**
 	* @param key Type of keys mapped to elements.
-	* @param T Type of elements mapped to keys.
+	* @param Val Type of elements mapped to keys.
 	* @param Compare Comparison object used to sort the binary tree.
 	* @param Alloc Object used to manahe the storage
    */
-template <class Key, class T, class Compare = std::less<Key>,
-	  class Alloc = std::allocator<ft::pair<const Key, T> > >
+template <class Key, class Val, class Compare = std::less<Key>,
+	  class Alloc = std::allocator<ft::pair<const Key, Val> > >
 class map
 {
 	public:
 	/***************************Member Types*****************************/
 	typedef Key key_type; //The first template parameter (Key)
-	typedef T mapped_type; //The second template parameter (T)
-	typedef ft::pair<const Key, T> value_type; //pair<const key_type,mapped_type>
+	typedef Val mapped_type; //The second template parameter (Val)
+	typedef ft::pair<const Key, Val> value_type; //pair<const key_type,mapped_type>
 	typedef Compare key_compare; //The third template parameter (Compare) - defaults to: less<key_type>
 	typedef Alloc allocator_type; //The fourth template parameter (Alloc)
 
@@ -96,7 +96,7 @@ class map
 	*/
 	class value_compare
 	{
-		friend class map<Key, T, Compare>;
+		friend class map<Key, Val, Compare>;
 	      protected:
 			Compare comp;
 			value_compare(Compare c) : comp(c) {}
@@ -667,9 +667,9 @@ class map
 	}
 };
 
-template <class Key, class T, class Compare, class Alloc>
-bool operator==(const ft::map<Key, T, Compare, Alloc> &lhs,
-		const ft::map<Key, T, Compare, Alloc> &rhs)
+template <class Key, class Val, class Compare, class Alloc>
+bool operator==(const ft::map<Key, Val, Compare, Alloc> &lhs,
+		const ft::map<Key, Val, Compare, Alloc> &rhs)
 {
 	if (lhs.size() != rhs.size())
 		return (false);
@@ -678,16 +678,16 @@ bool operator==(const ft::map<Key, T, Compare, Alloc> &lhs,
 	return ft::equal(lhs.begin(), lhs.end(), rhs.begin());
 }
 
-template <class Key, class T, class Compare, class Alloc>
-bool operator!=(const ft::map<Key, T, Compare, Alloc> &lhs,
-		const ft::map<Key, T, Compare, Alloc> &rhs)
+template <class Key, class Val, class Compare, class Alloc>
+bool operator!=(const ft::map<Key, Val, Compare, Alloc> &lhs,
+		const ft::map<Key, Val, Compare, Alloc> &rhs)
 {
 	return (!(lhs == rhs));
 }
 
-template <class Key, class T, class Compare, class Alloc>
-bool operator<(const ft::map<Key, T, Compare, Alloc> &lhs,
-	       const ft::map<Key, T, Compare, Alloc> &rhs)
+template <class Key, class Val, class Compare, class Alloc>
+bool operator<(const ft::map<Key, Val, Compare, Alloc> &lhs,
+	       const ft::map<Key, Val, Compare, Alloc> &rhs)
 {
 	if (rhs.empty())
 		return (false);
@@ -696,22 +696,22 @@ bool operator<(const ft::map<Key, T, Compare, Alloc> &lhs,
 	return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(),
 					    rhs.end()));
 }
-template <class Key, class T, class Compare, class Alloc>
-bool operator<=(const ft::map<Key, T, Compare, Alloc> &lhs,
-		const ft::map<Key, T, Compare, Alloc> &rhs)
+template <class Key, class Val, class Compare, class Alloc>
+bool operator<=(const ft::map<Key, Val, Compare, Alloc> &lhs,
+		const ft::map<Key, Val, Compare, Alloc> &rhs)
 {
 	return (!(rhs < lhs));
 }
 
-template <class Key, class T, class Compare, class Alloc>
-bool operator>(const ft::map<Key, T, Compare, Alloc> &lhs,
-	       const ft::map<Key, T, Compare, Alloc> &rhs)
+template <class Key, class Val, class Compare, class Alloc>
+bool operator>(const ft::map<Key, Val, Compare, Alloc> &lhs,
+	       const ft::map<Key, Val, Compare, Alloc> &rhs)
 {
 	return (rhs < lhs);
 }
-template <class Key, class T, class Compare, class Alloc>
-bool operator>=(const ft::map<Key, T, Compare, Alloc> &lhs,
-		const ft::map<Key, T, Compare, Alloc> &rhs)
+template <class Key, class Val, class Compare, class Alloc>
+bool operator>=(const ft::map<Key, Val, Compare, Alloc> &lhs,
+		const ft::map<Key, Val, Compare, Alloc> &rhs)
 {
 	return (!(lhs < rhs));
 }
