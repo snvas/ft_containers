@@ -6,7 +6,7 @@
 /*   By: snovaes <snovaes@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/05 00:13:07 by snovaes           #+#    #+#             */
-/*   Updated: 2023/02/05 00:18:18 by snovaes          ###   ########.fr       */
+/*   Updated: 2023/02/05 15:49:14 by snovaes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ int main(int argc, char **argv){
 
 	if (argc == 1){
 		test_vector();
+		test_pair();
+		test_map();
 	}
 	else{
 		if (strcmp(argv[1], "vector") == 0)
