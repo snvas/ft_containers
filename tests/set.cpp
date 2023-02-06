@@ -220,7 +220,7 @@ static void test_insert(){
 	std::cout << "insert a pair on an empty set" << std::endl;
 	ft::set<std::string> strset;
 
-	ft::pair<typename ft::set<std::string>::iterator, bool> p = strset.insert("arara");
+	ft::pair<ft::set<std::string>::iterator, bool> p = strset.insert("arara");
 	std::cout << "set:\n" << strset << std::endl;
 	std::cout << "set return " << *p.first << " " << p.second << std::endl;
 	p = strset.insert("macaco");
