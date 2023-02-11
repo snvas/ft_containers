@@ -22,11 +22,12 @@ namespace ft
 	class set 
 	{
 	public:
-		typedef Key key_type;
-		typedef Key value_type;
-		typedef Compare key_compare;
+		/***************************Member Types*****************************/
+		typedef Key key_type; //the first template parameter (Key)
+		typedef Key value_type; 
+		typedef Compare key_compare; // the second template parameter (Compare) -  default to: less<key_type>
 		typedef Compare value_compare;
-		typedef Allocator allocator_type;
+		typedef Allocator allocator_type; // the third template parameter (Allocator)
 		typedef typename Allocator::size_type size_type;
 		typedef std::ptrdiff_t difference_type;
 		typedef value_type& reference;
@@ -44,22 +45,33 @@ namespace ft
 			typedef typename Allocator::template rebind<node_type>::other		node_allocator_type;
 		public:
 		typedef ft::Rbtree<value_type, value_compare, allocator_type, node_allocator_type>	tree_type;
-		//typedef typename tree_type::iterator		iterator;
-		//typedef typename tree_type::const_iterator	const_iterator;
-		//typedef typename tree_type::reverse_iterator	reverse_iterator;
-		//typedef typename tree_type::const_reverse_iterator	const_reverse_iterator;
 
 	protected:
 		tree_type 							_tree;
 		size_type 							_size;
+		key_compare							_comp;
 
 	public:
+
 		const tree_type* tree() const { return &_tree; }
 	
+		/**
+		 * Default Constructor
+		 * Constructs an empty container, with no elements.
+		 * creates a set with a size of 0
+		*/
 		set() : _size(0) {}
 
 		explicit set(const Compare &comp, const Allocator& alloc = Allocator()) : _tree(comp, alloc), _size(0) {}
 		
+		/**
+		 * range constructor - Constructs a container with as many elements as the range [first,last),
+		 * with each element constructed from its corresponding element in that range.
+		 * @param first	An iterator representing first element in range
+		 * @param last	An iterator representing end of the range (will be excluded and not copied).
+		 * @param comp The template param used for sorting the set.
+		 * @param alloc The template param used for the allocation.
+		*/
 		template<class U>
 		set(U first, U last, 
 			const Compare& comp = Compare(), 
@@ -70,13 +82,20 @@ namespace ft
 				}
 			}
 
-
+		/**
+		 * copy constructor - Constructs a container with a copy of each of the elements in other.
+		 * @param other The set that will be copied.
+		*/
 		set(const set& other) : _tree(other._tree), _size(other._size) {}
 
+		/**
+		 * Set destructor - destroy the contained object.
+		*/
 		~set(void){
 			clear();
 		 }
 
+		/***************************Operator =*****************************/
 		set& operator=(const set& other){
 			if (this != &other){
 				_tree = other._tree;
@@ -85,23 +104,53 @@ namespace ft
 			return (*this);
 		}
 
+		/**
+		 * Returns a copy of the allocator object associated with the set.
+		*/
 		allocator_type get_allocator() const{
 			return (_tree.get_allocator());
 		}
 
+		/*************************** Iterators *****************************/
+		/**
+	 	* Return iterator to beginning
+	 	* @return an iterator referring to the first node of the set(minimum value).
+		*/
 		iterator begin()
 		{
+			//node_type *node = this->_tree.minimum(this->_tree.get_root());
+			//if (node){
+			//	iterator it(node->left);
+			//	return it;
+			//}
+			//return (NULL);
+
 			iterator it(this->_tree.minimum(this->_tree.get_root()));
 			return (it);
 		}
 
+		/**
+		 * Return const_iterator to beginning
+	 	* @return an const_iterator pointing to the first node of the set(minimum value).
+		*/
 		const_iterator begin() const
 		{
+			//node_type *node = this->_tree.minimum(this->_tree.get_root());
+			//if (node){
+			//	const_iterator it(node->left);
+			//	return it;
+			//}
+			//return (NULL);
+
 			const_iterator it(this->_tree.minimum(this->_tree.get_root()));
 			return (it);
 		}
 
-		//Return iterator to end - Returns an iterator referring to the past-the-end element in the map container.
+		/**
+		 * Returns an iterator referring to the past-the-end element in the set container.
+		 * @return An iterator pointing after the last set's element, on a dummy node. 
+		 * Access this iterator will result in undefined behavior.
+		*/
 		iterator end()
 		{
 			node_type *node = this->_tree.maximum(this->_tree.get_root());
@@ -113,12 +162,61 @@ namespace ft
 			return (NULL);
 		}
 		
+		/**
+	 	* Returns an const_iterator referring to the past-the-end element in the set container.
+		 * @return An const_iterator pointing after the last set's element, on a dummy node. 
+		 * Access this iterator will result in undefined behavior.
+		*/
 		const_iterator end() const
 		{
 			node_type *node = this->_tree.maximum(this->_tree.get_root());
-			const_iterator it(node->right);
-			return (it);
+			if (node){
+				const_iterator it(node->right);
+				return (it);
+			}
+			return (NULL);
 		}
+
+	/**
+	 * Return reverse iterator to reverse beginning
+	 * @return reverse iterator pointing to the last element in the container (i.e., its reverse beginning).
+	*/
+	reverse_iterator rbegin()
+	{
+			return (reverse_iterator(--this->end()));
+	}
+	
+	/**
+	 * Return const_reverse iterator to reverse beginning
+	 * @return a const_reverse iterator pointing to the last element in the container (i.e., its reverse beginning).
+	*/
+	const_reverse_iterator rbegin() const
+	{
+		return (const_reverse_iterator(--this->end()));
+	}
+	
+	/**
+	 * Return reverse iterator to reverse end
+	 * @return  A reverse_iterator pointing before the first map's element, on a dummy node.
+	 * Access this iterator will result in undefined behavior.
+	 * 
+	*/
+	reverse_iterator rend()
+	{
+		return (reverse_iterator(--this->begin()));
+	}
+
+	/**
+	 * Return a const_reverse iterator to reverse end
+	 * @return  A const_reverse_iterator pointing before the first map's element, on a dummy node.
+	 * Access this iterator will result in undefined behavior.
+	 * 
+	*/
+	const_reverse_iterator rend() const
+	{
+		return (const_reverse_iterator(--this->begin()));
+	}
+	
 
 		void clear(void){
 				_tree.clear();
@@ -168,105 +266,31 @@ namespace ft
 		}
 
 		iterator lower_bound(const Key& key) {
-			node_type *n;
-			node_type *res;
-			res = end().base();
-			if (!_size)
-				return iterator(res);
-			n = _tree->root();
-			while (1){
-				if ((*n).data == key){
-					res = n;
-					break;
-				} else if (!_comp((*n).data, key)){
-					res = n;
-					if (!n->left)
-						break;
-					n = n->left;
-				} else if (_comp((*n).data, key)){
-					if (!n->right)
-						break;
-					n = n->right;
-				}
-			}
-			return iterator(res);
+			node_type *node =  this->_tree.lower_bound(_tree.get_root(), key);
+			if (!node)
+				return (this->end());
+			return (iterator(node));
 		}
 
 		const_iterator lower_bound(const Key& key) const{
-			node_type *n;
-			const node_type *res;
-			res = end().base();
-			if (!_size)
-				return const_iterator(res);
-			n = _tree->root();
-			while (1){
-				if ((*n).data == key){
-					res = n;
-					break;
-				} else if (!_comp((*n).data, key)){
-					res = n;
-					if (!n->left)
-						break;
-					n = n->left;
-				} else if (_comp((*n).data, key)){
-					if (!n->right)
-						break;
-					n = n->right;
-				}
-			}
-			return const_iterator(res);
+				node_type *node =  this->_tree.lower_bound(_tree.get_root(), key);
+			if (!node)
+				return (this->end());
+			return (const_iterator(node));
 		}
 
 		iterator upper_bound(const value_type& key) {
-			node_type *n;
-			node_type *res;
-			res = end().base();
-			if (!_size)
-				return iterator(res);
-			n = _tree->root();
-			while (1){
-				if ((*n).data == key){
-						if (!n->right)
-							break;
-						n = n->right;
-				} else if (!_comp((*n).data, key)){
-					res = n;
-					if (!n->left)
-						break;
-					n = n->left;
-				} else if (_comp((*n).data, key)){
-					if (!n->right)
-						break;
-					n = n->right;
-				}
-			}
-			return iterator(res);
+			node_type *node =  this->_tree.upper_bound(_tree.get_root(), key);
+			if (!node)
+				return (this->end());
+			return (iterator(node));
 		}
 
 		const_iterator upper_bound(const value_type& key) const{
-			node_type *n;
-			const node_type *res;
-			res = end().base();
-			if (!_size)
-				return const_iterator(res);
-			n = _tree->root();
-			while (1){
-				if ((*n).data == key){
-						if (!n->right)
-							break;
-						n = n->right;
-				} else if (!_comp((*n).data, key)){
-					res = n;
-					if (!n->left)
-						break;
-					n = n->left;
-				} else if (_comp((*n).data, key)){
-					if (!n->right)
-						break;
-					n = n->right;
-				}
-			}
-			return const_iterator(res);
+			node_type *node =  this->_tree.upper_bound(_tree.get_root(), key);
+			if (!node)
+				return (this->end());
+			return (const_iterator(node));
 		}
 
 		iterator find(const Key& val) {
@@ -286,24 +310,26 @@ namespace ft
 		}
 
 		void erase(iterator position){
-			_tree.delete_node(*position);
+			_tree.delete_node(position.get_node_pointer());
 			_size--;
 		}
 
 		void erase(iterator first, iterator last){
-			for (iterator it = first; it != last; it++){
-				erase(it);
+			iterator it;
+			while (first != last){
+				it = first;
+				++first;
+				_tree.delete_node(it.get_node_pointer());
 			}
 		}
 
 		size_type erase(const key_type& k){
-			iterator ite = this->find(k);
-			if (ite != end()){
-				this->_tree.remove(ite.base());
-				_size--;
-				return (1);
-			}
-			return 0;
+			if (this->_tree.delete_value(k))
+		{
+			this->_size -= 1;
+			return (1);
+		}
+		return (0);
 		}
 
 		size_type count(const Key& key) const{
@@ -325,7 +351,7 @@ namespace ft
 		}
 
 		value_compare value_comp(void) const{
-			return (value_compare());
+			return (value_compare(key_comp()));
 		}
 
 		void print(Key const& vec) {

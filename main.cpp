@@ -6,7 +6,7 @@
 /*   By: snovaes <snovaes@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/05 00:13:07 by snovaes           #+#    #+#             */
-/*   Updated: 2023/02/05 20:44:23 by snovaes          ###   ########.fr       */
+/*   Updated: 2023/02/11 16:47:45 by snovaes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,12 @@ int main(int argc, char **argv){
 			test_map();
 		else if (strcmp(argv[1], "stack") == 0)
 			test_stack();
+		else if (strcmp(argv[1], "set") == 0)
+			test_set();
 		else
 		{
 			std::cout << "Invalid container name\n" <<
-			"Use: ./ft_container[_st1] [ vector  | stack | map ] " << std::endl;
+			"Use: ./ft_container[_st1] [ vector  | stack | map | set ] " << std::endl;
 			return (1);
 		}
 	}
