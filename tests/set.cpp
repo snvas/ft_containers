@@ -25,15 +25,6 @@ void print(const T& x){
 	std::cout << std::endl;
 }
 
-//class compare the opposito of std::less
-template<typename T>
-class CustomComparator{
-	public:
-		bool operator()(T lhs, T rhs) const{
-			return lhs > rhs;
-		}
-};
-
 static void test_default_constructor(){
 		std::cout << "[ Testing set ]" << std::endl;
 		{
@@ -246,25 +237,22 @@ static void test_insert(){
 	std::cout << "------------------------------------" << std::endl;
 }
 
-static void test_insert_custom(){
-	std::cout << "[ test insert with custom comparator ]" << std::endl;
-
-	std::cout << "insert a pair on an empty set" << std::endl;
-	ft::set<std::string, CustomComparator<std::string> > strset;
-	strset.insert("arara");
-	std::cout << "set:\n" << strset << std::endl;
+static void test_insert_hint(){
+	std::cout << "[ test insert hint]" << std::endl;
+	ft::set<int> myset;
+	myset.insert(100);
+	ft::set<int>::iterator it = myset.begin();
+	myset.insert (it, 300);  
+	myset.insert (it, 400);  
+	std::cout << "iterator: " << *it << std::endl;
+	std::cout << "myset contains: " << myset << std::endl;
+	ft::pair<ft::set<int>::iterator, bool> ret;
+	ret = myset.insert(400);
+	if (ret.second == false){
+		std::cout << "element already existed";
+		std::cout << " with a value of " << *(ret.first) << std::endl;
+	} 
 	std::cout << "------------------------------------" << std::endl;
-
-	std::cout << "test the return value of the insertion" << std::endl;
-	ft::pair<ft::set<std::string, std::string>::iterator, bool> result;
-	result = strset.insert("carro");
-	std::cout << "result->first" << *result.first << "\nresult->second: " << result.second << std::endl;
-
-	std::cout << "insert an item with an already existing key" << std::endl;
-	result = strset.insert("moto");
-	std::cout << "result->first" << *result.first << "\nresult->second: " << result.second << std::endl;
-	std::cout << "------------------------------------" << std::endl;
-
 }
 
 static void test_insert_range(){
@@ -568,7 +556,7 @@ void test_set(void){
 		test_size();
 		test_max_size();
 		test_insert();
-		test_insert_custom();
+		test_insert_hint();
 		test_insert_range();
 		test_erase();
 		test_erase_value();

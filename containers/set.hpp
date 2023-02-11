@@ -177,47 +177,46 @@ namespace ft
 			return (NULL);
 		}
 
-	/**
-	 * Return reverse iterator to reverse beginning
-	 * @return reverse iterator pointing to the last element in the container (i.e., its reverse beginning).
-	*/
-	reverse_iterator rbegin()
-	{
-			return (reverse_iterator(--this->end()));
-	}
+		/**
+		 * Return reverse iterator to reverse beginning
+		 * @return reverse iterator pointing to the last element in the container (i.e., its reverse beginning).
+		*/
+		reverse_iterator rbegin()
+		{
+				return (reverse_iterator(--this->end()));
+		}
 	
-	/**
-	 * Return const_reverse iterator to reverse beginning
-	 * @return a const_reverse iterator pointing to the last element in the container (i.e., its reverse beginning).
-	*/
-	const_reverse_iterator rbegin() const
-	{
-		return (const_reverse_iterator(--this->end()));
-	}
+		/**
+		 * Return const_reverse iterator to reverse beginning
+		 * @return a const_reverse iterator pointing to the last element in the container (i.e., its reverse beginning).
+		*/
+		const_reverse_iterator rbegin() const
+		{
+			return (const_reverse_iterator(--this->end()));
+		}
 	
-	/**
-	 * Return reverse iterator to reverse end
-	 * @return  A reverse_iterator pointing before the first map's element, on a dummy node.
-	 * Access this iterator will result in undefined behavior.
-	 * 
-	*/
-	reverse_iterator rend()
-	{
-		return (reverse_iterator(--this->begin()));
-	}
+		/**
+		 * Return reverse iterator to reverse end
+		 * @return  A reverse_iterator pointing before the first map's element, on a dummy node.
+		 * Access this iterator will result in undefined behavior.
+		 * 
+		*/
+		reverse_iterator rend()
+		{
+			return (reverse_iterator(--this->begin()));
+		}
 
-	/**
-	 * Return a const_reverse iterator to reverse end
-	 * @return  A const_reverse_iterator pointing before the first map's element, on a dummy node.
-	 * Access this iterator will result in undefined behavior.
-	 * 
-	*/
-	const_reverse_iterator rend() const
-	{
-		return (const_reverse_iterator(--this->begin()));
-	}
+		/**
+		 * Return a const_reverse iterator to reverse end
+	 	* @return  A const_reverse_iterator pointing before the first map's element, on a dummy node.
+	 	* Access this iterator will result in undefined behavior.
+	 	* 
+		*/
+		const_reverse_iterator rend() const
+		{
+			return (const_reverse_iterator(--this->begin()));
+		}
 	
-
 		void clear(void){
 				_tree.clear();
 		}
@@ -247,8 +246,13 @@ namespace ft
 		}
 
 		iterator insert(iterator hint, const value_type& val){
-			(void)hint;
-			return insert(val).first;
+			node_type *node_pos = hint.get_node_pointer();
+			node_type *look = this->_tree.lookup_value(node_pos, val);
+			if (look)
+				return (iterator(look));
+			node_type *node = this->_tree.insert_value(node_pos, val);
+			this->_size += 1;
+			return (iterator(node));
 		}
 
 		template<class U>
