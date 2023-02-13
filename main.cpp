@@ -6,7 +6,7 @@
 /*   By: snovaes <snovaes@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/05 00:13:07 by snovaes           #+#    #+#             */
-/*   Updated: 2023/02/11 16:47:45 by snovaes          ###   ########.fr       */
+/*   Updated: 2023/02/12 20:57:49 by snovaes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 int main(int argc, char **argv){
 	if (argc > 2){
 		std::cout << "invalid number os arguments\n" <<
-		"Use: ./ft_container[_st1] [ vector | stack | map  ] " << std::endl;
+		"Use: ./ft_container[_st1] [ vector | stack | map | set ] " << std::endl;
 		return (1);
 	}
 	clock_t start_time;
@@ -43,7 +43,7 @@ int main(int argc, char **argv){
 		else
 		{
 			std::cout << "Invalid container name\n" <<
-			"Use: ./ft_container[_st1] [ vector  | stack | map | set ] " << std::endl;
+			"Use: ./ft_container[_st1] [ vector | stack | map | set ] " << std::endl;
 			return (1);
 		}
 	}

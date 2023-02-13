@@ -5,12 +5,18 @@ int main(void)
 	ft::map<int, int> notEmptyMap;
 
 	notEmptyMap.insert(ft::make_pair(5, 1));
-	notEmptyMap.insert(ft::make_pair(6, 1));
-	notEmptyMap.insert(ft::make_pair(4, 1));
-	notEmptyMap.insert(ft::make_pair(8, 1));
+	notEmptyMap.insert(ft::make_pair(2, 1));
 	notEmptyMap.insert(ft::make_pair(9, 1));
-	notEmptyMap.insert(ft::make_pair(10, 1));
-	notEmptyMap.insert(ft::make_pair(10, 1));
+	notEmptyMap.insert(ft::make_pair(1, 1));
+	notEmptyMap.insert(ft::make_pair(6, 1));
+	notEmptyMap.insert(ft::make_pair(8, 1));
+	notEmptyMap.insert(ft::make_pair(0, 1));
+	notEmptyMap.insert(ft::make_pair(20, 1));
+	notEmptyMap.insert(ft::make_pair(30, 1));
+	notEmptyMap.insert(ft::make_pair(35, 1));
+	notEmptyMap.insert(ft::make_pair(40, 1));
+	notEmptyMap.insert(ft::make_pair(50, 1));
+	notEmptyMap.insert(ft::make_pair(0, 1));
 
 	notEmptyMap.print_tree();
 
